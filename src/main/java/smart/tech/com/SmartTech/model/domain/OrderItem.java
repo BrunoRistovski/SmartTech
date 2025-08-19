@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import smart.tech.com.SmartTech.model.domain.Product;
 
 @Getter
 @Setter
@@ -32,6 +31,12 @@ public class OrderItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false)
     private Double priceOfProductAndQuantity;
+
+    public OrderItem(Order order, Product product, Integer quantity, Double priceOfProductAndQuantity) {
+        this.order = order;
+        this.product = product;
+        this.quantity = quantity;
+        this.priceOfProductAndQuantity = priceOfProductAndQuantity;
+    }
 }

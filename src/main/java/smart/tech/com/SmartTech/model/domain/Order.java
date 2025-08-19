@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import smart.tech.com.SmartTech.model.Enumerations.OrderStatus;
+import smart.tech.com.SmartTech.model.enumerations.OrderStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,4 +50,15 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
+
+    public Order(OrderStatus status, String address, String city, String zipcode, LocalDateTime createdAt, Double totalAmount, User user, List<OrderItem> orderItems) {
+        this.status = status;
+        this.address = address;
+        this.city = city;
+        this.zipcode = zipcode;
+        this.createdAt = createdAt;
+        this.totalAmount = totalAmount;
+        this.user = user;
+        this.orderItems = orderItems;
+    }
 }

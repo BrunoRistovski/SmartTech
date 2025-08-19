@@ -27,9 +27,18 @@ public class ShoppingCart {
     @Column(nullable = false)
     private LocalDateTime dateCreated;
 
+    @Column(nullable = false)
+    private Double totalAmount;
+
     @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ShoppingCartItem> shoppingCartItems;
+
+    public ShoppingCart(LocalDateTime dateCreated, Double totalAmount, List<ShoppingCartItem> shoppingCartItems) {
+        this.dateCreated = dateCreated;
+        this.totalAmount = totalAmount;
+        this.shoppingCartItems = shoppingCartItems;
+    }
 }

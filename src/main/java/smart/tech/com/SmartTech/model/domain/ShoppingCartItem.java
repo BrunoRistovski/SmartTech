@@ -31,6 +31,12 @@ public class ShoppingCartItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false)
     private Double priceOfProductAndQuantity;
+
+    public ShoppingCartItem(ShoppingCart shoppingCart, Product product, Integer quantity, Double priceOfProductAndQuantity) {
+        this.shoppingCart = shoppingCart;
+        this.product = product;
+        this.quantity = quantity;
+        this.priceOfProductAndQuantity = priceOfProductAndQuantity;
+    }
 }

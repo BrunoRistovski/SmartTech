@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import smart.tech.com.SmartTech.model.Enumerations.Category;
+import smart.tech.com.SmartTech.model.enumerations.Category;
 
 import java.util.List;
 
@@ -45,4 +45,15 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<OrderItem> orderItems;
+
+    public Product(String name, String description, String imageUrl, Category category, Double price, Integer stockQuantity, List<ShoppingCartItem> shoppingCartItems, List<OrderItem> orderItems) {
+        this.name = name;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.category = category;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.shoppingCartItems = shoppingCartItems;
+        this.orderItems = orderItems;
+    }
 }

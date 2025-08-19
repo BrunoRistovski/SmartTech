@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import smart.tech.com.SmartTech.model.Enumerations.Role;
+import smart.tech.com.SmartTech.model.enumerations.Role;
 
 import java.time.LocalDateTime;
 import java.util.List;
