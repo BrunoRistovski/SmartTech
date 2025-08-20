@@ -1,7 +1,7 @@
-package smart.tech.com.SmartTech.services;
+package smart.tech.com.SmartTech.services.interfaces;
 
+import smart.tech.com.SmartTech.model.DTO.OrderDTO;
 import smart.tech.com.SmartTech.model.domain.Order;
-import smart.tech.com.SmartTech.model.domain.OrderItem;
 import smart.tech.com.SmartTech.model.enumerations.OrderStatus;
 
 import java.time.LocalDateTime;
@@ -13,8 +13,7 @@ public interface OrderService {
 
     Order findById(long orderId);
 
-    Order createOrder (OrderStatus orderStatus, String address, String city, String zipcode,
-                       LocalDateTime createdAt, Double totalAmount, String username);
+    Order createOrder (OrderDTO orderDTO);
 
     Order submitOrder(Long orderId);
 

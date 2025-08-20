@@ -2,6 +2,7 @@ package smart.tech.com.SmartTech.services.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smart.tech.com.SmartTech.model.DTO.OrderItemDTO;
 import smart.tech.com.SmartTech.model.domain.Order;
 import smart.tech.com.SmartTech.model.domain.OrderItem;
 import smart.tech.com.SmartTech.model.domain.Product;
@@ -11,9 +12,7 @@ import smart.tech.com.SmartTech.model.exceptions.QuantityException;
 import smart.tech.com.SmartTech.repository.OrderItemRepository;
 import smart.tech.com.SmartTech.repository.OrderRepository;
 import smart.tech.com.SmartTech.repository.ProductRepository;
-import smart.tech.com.SmartTech.services.OrderItemService;
-
-import java.util.List;
+import smart.tech.com.SmartTech.services.interfaces.OrderItemService;
 
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
@@ -30,18 +29,18 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Transactional
     @Override
-    public OrderItem createOrderItem(Long orderId, Long productId, Integer quantity) {
+    public OrderItem createOrderItem(OrderItemDTO orderItemDTO) {
 
-        Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
-        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        Order order = orderRepository.findById(orderItemDTO.getOrderId()).orElseThrow(OrderNotFoundException::new);
+        Product product = productRepository.findById(orderItemDTO.getProductId()).orElseThrow(ProductNotFoundException::new);
 
         Double price = product.getPrice();
-        Double totalPrice = product.getPrice() * quantity;
+        Double totalPrice = product.getPrice() * orderItemDTO.getQuantity();
 
-        if(quantity > product.getStockQuantity())
+        if(orderItemDTO.getQuantity() > product.getStockQuantity())
             throw new QuantityException();
 
-        OrderItem orderItem = new OrderItem(order,product,quantity,totalPrice);
+        OrderItem orderItem = new OrderItem(order,product,orderItemDTO.getQuantity(),totalPrice);
 
         //updating totalAmount for Order.
         Double orderTotalPrice = order.getTotalAmount() + totalPrice;

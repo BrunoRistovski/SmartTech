@@ -2,6 +2,7 @@ package smart.tech.com.SmartTech.services.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smart.tech.com.SmartTech.model.DTO.ShoppingCartItemDTO;
 import smart.tech.com.SmartTech.model.domain.Product;
 import smart.tech.com.SmartTech.model.domain.ShoppingCart;
 import smart.tech.com.SmartTech.model.domain.ShoppingCartItem;
@@ -12,10 +13,7 @@ import smart.tech.com.SmartTech.model.exceptions.ShoppingCartNotFoundException;
 import smart.tech.com.SmartTech.repository.ProductRepository;
 import smart.tech.com.SmartTech.repository.ShoppingCartItemRepository;
 import smart.tech.com.SmartTech.repository.ShoppingCartRepository;
-import smart.tech.com.SmartTech.services.ShoppingCartItemService;
-
-import java.util.ArrayList;
-import java.util.List;
+import smart.tech.com.SmartTech.services.interfaces.ShoppingCartItemService;
 
 @Service
 public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
@@ -32,18 +30,18 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
     @Transactional
     @Override
-    public ShoppingCartItem createShoppingCartItem(Long shoppingCartId, Long productId, Integer quantity) {
+    public ShoppingCartItem createShoppingCartItem(ShoppingCartItemDTO  shoppingCartItemDTO) {
 
-        ShoppingCart shoppingCart = shoppingCartRepository.findById(shoppingCartId).orElseThrow(ShoppingCartNotFoundException::new);
-        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        ShoppingCart shoppingCart = shoppingCartRepository.findById(shoppingCartItemDTO.getShoppingCartId()).orElseThrow(ShoppingCartNotFoundException::new);
+        Product product = productRepository.findById(shoppingCartItemDTO.getProductId()).orElseThrow(ProductNotFoundException::new);
 
         Double productPrice = product.getPrice();
-        Double totalPrice = productPrice * quantity;
+        Double totalPrice = productPrice * shoppingCartItemDTO.getQuantity();
 
-        if(quantity > product.getStockQuantity())
+        if(shoppingCartItemDTO.getQuantity() > product.getStockQuantity())
             throw new QuantityException();
 
-        ShoppingCartItem shoppingCartItem = new ShoppingCartItem(shoppingCart,product,quantity,totalPrice);
+        ShoppingCartItem shoppingCartItem = new ShoppingCartItem(shoppingCart,product,shoppingCartItemDTO.getQuantity(),totalPrice);
 
         //updating shopping car total amount
 

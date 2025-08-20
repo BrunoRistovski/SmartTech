@@ -2,13 +2,9 @@ package smart.tech.com.SmartTech.services.impl;
 
 import org.springframework.stereotype.Service;
 import smart.tech.com.SmartTech.model.domain.ShoppingCart;
-import smart.tech.com.SmartTech.model.domain.ShoppingCartItem;
 import smart.tech.com.SmartTech.model.exceptions.ShoppingCartNotFoundException;
 import smart.tech.com.SmartTech.repository.ShoppingCartRepository;
-import smart.tech.com.SmartTech.services.ShoppingCartItemService;
-import smart.tech.com.SmartTech.services.ShoppingCartService;
-
-import java.time.LocalDateTime;
+import smart.tech.com.SmartTech.services.interfaces.ShoppingCartService;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {

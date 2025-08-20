@@ -2,13 +2,14 @@ package smart.tech.com.SmartTech.services.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smart.tech.com.SmartTech.model.DTO.ProductDTO;
 import smart.tech.com.SmartTech.model.domain.OrderItem;
 import smart.tech.com.SmartTech.model.domain.Product;
 import smart.tech.com.SmartTech.model.domain.ShoppingCartItem;
 import smart.tech.com.SmartTech.model.enumerations.Category;
 import smart.tech.com.SmartTech.model.exceptions.ProductNotFoundException;
 import smart.tech.com.SmartTech.repository.ProductRepository;
-import smart.tech.com.SmartTech.services.ProductService;
+import smart.tech.com.SmartTech.services.interfaces.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,25 +35,26 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public Product createProduct(String name, String description, String imageUrl, Category category, Double price, Integer stockQuantity) {
+    public Product createProduct(ProductDTO productDTO) {
 
         List<ShoppingCartItem> shoppingCartItemsInProduct = new ArrayList<>();
         List<OrderItem> orderItemsInsideProduct = new ArrayList<>();
 
-        Product product = new Product(name,description,imageUrl,category,price,stockQuantity,shoppingCartItemsInProduct,orderItemsInsideProduct);
+        Product product = new Product(productDTO.getName(),productDTO.getDescription(),productDTO.getImageUrl(),productDTO.getCategory(),
+                productDTO.getPrice(),productDTO.getStockQuantity(),shoppingCartItemsInProduct,orderItemsInsideProduct);
         return productRepository.save(product);
     }
 
     @Transactional
     @Override
-    public Product updateProduct(Long productId, String name, String description, String imageUrl, Category category, Double price, Integer stockQuantity) {
+    public Product updateProduct(Long productId, ProductDTO productDTO) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
-        product.setName(name);
-        product.setDescription(description);
-        product.setImageUrl(imageUrl);
-        product.setCategory(category);
-        product.setPrice(price);
-        product.setStockQuantity(stockQuantity);
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setImageUrl(productDTO.getImageUrl());
+        product.setCategory(productDTO.getCategory());
+        product.setPrice(productDTO.getPrice());
+        product.setStockQuantity(productDTO.getStockQuantity());
         return productRepository.save(product);
     }
 
