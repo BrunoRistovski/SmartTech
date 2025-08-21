@@ -6,16 +6,17 @@ import smart.tech.com.SmartTech.model.enumerations.OrderStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderService {
 
     List<Order> findAll();
 
-    Order findById(long orderId);
+    Optional<Order> findById(long orderId);
 
-    Order createOrder (OrderDTO orderDTO);
+    Optional<Order> createOrder (OrderDTO orderDTO);
 
-    Order submitOrder(Long orderId);
+    Optional<Order> submitOrder(Long orderId);
 
-    Order cancelOrder(Long orderId);
+    Optional<Order> cancelOrder(Long orderId);
 }

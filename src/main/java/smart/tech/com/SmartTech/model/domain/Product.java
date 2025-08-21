@@ -1,5 +1,6 @@
 package smart.tech.com.SmartTech.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,10 +41,12 @@ public class Product {
 
     private Integer stockQuantity;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    @JsonBackReference
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<ShoppingCartItem> shoppingCartItems;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    @JsonBackReference
+    @OneToMany(mappedBy = "product")
     private List<OrderItem> orderItems;
 
     public Product(String name, String description, String imageUrl, Category category, Double price, Integer stockQuantity, List<ShoppingCartItem> shoppingCartItems, List<OrderItem> orderItems) {

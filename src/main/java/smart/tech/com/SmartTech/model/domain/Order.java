@@ -1,5 +1,8 @@
 package smart.tech.com.SmartTech.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,9 +48,12 @@ public class Order {
     @Column(nullable = false)
     private Double totalAmount;
 
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User user;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
 

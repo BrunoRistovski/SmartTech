@@ -18,4 +18,9 @@ public class OrderItemDTO {
     @NotNull
     private Integer quantity;
 
+    public OrderItemDTO(Long orderId, Long productId, Integer quantity) {
+        this.orderId = orderId;
+        this.productId = productId;
+        this.quantity = quantity;
+    }
 }

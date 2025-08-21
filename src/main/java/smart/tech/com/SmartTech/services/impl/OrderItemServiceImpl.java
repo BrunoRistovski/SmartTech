@@ -14,6 +14,8 @@ import smart.tech.com.SmartTech.repository.OrderRepository;
 import smart.tech.com.SmartTech.repository.ProductRepository;
 import smart.tech.com.SmartTech.services.interfaces.OrderItemService;
 
+import java.util.Optional;
+
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
 
@@ -29,7 +31,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Transactional
     @Override
-    public OrderItem createOrderItem(OrderItemDTO orderItemDTO) {
+    public Optional<OrderItem> createOrderItem(OrderItemDTO orderItemDTO) {
 
         Order order = orderRepository.findById(orderItemDTO.getOrderId()).orElseThrow(OrderNotFoundException::new);
         Product product = productRepository.findById(orderItemDTO.getProductId()).orElseThrow(ProductNotFoundException::new);
@@ -47,7 +49,9 @@ public class OrderItemServiceImpl implements OrderItemService {
         order.setTotalAmount(orderTotalPrice);
         orderRepository.save(order);
 
-        return orderItemRepository.save(orderItem);
+        orderItemRepository.save(orderItem);
+
+        return Optional.of(orderItem);
     }
 
 }

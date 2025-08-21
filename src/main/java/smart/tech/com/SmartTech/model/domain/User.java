@@ -1,5 +1,6 @@
 package smart.tech.com.SmartTech.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,6 +50,7 @@ public class User {
     @OneToOne( cascade = CascadeType.ALL)
     private ShoppingCart shoppingCart;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 

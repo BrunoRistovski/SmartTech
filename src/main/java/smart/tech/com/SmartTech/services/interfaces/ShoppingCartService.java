@@ -2,8 +2,10 @@ package smart.tech.com.SmartTech.services.interfaces;
 
 import smart.tech.com.SmartTech.model.domain.ShoppingCart;
 
+import java.util.Optional;
+
 public interface ShoppingCartService {
 
-    ShoppingCart getShoppingCartById(Long shoppingCartId);
+    Optional<ShoppingCart> getShoppingCartById(Long shoppingCartId);
 
 }

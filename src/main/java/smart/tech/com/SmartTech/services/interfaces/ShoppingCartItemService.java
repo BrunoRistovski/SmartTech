@@ -3,10 +3,14 @@ package smart.tech.com.SmartTech.services.interfaces;
 import smart.tech.com.SmartTech.model.DTO.ShoppingCartItemDTO;
 import smart.tech.com.SmartTech.model.domain.ShoppingCartItem;
 
+import java.util.Optional;
+
 public interface ShoppingCartItemService {
 
-    ShoppingCartItem createShoppingCartItem(ShoppingCartItemDTO shoppingCartItemDTO);
+    Optional<ShoppingCartItem> findShoppingCartItemById(Long id);
 
-    ShoppingCartItem deleteShoppingCartItem(Long shoppingCartItemId);
+    Optional<ShoppingCartItem> createShoppingCartItem(ShoppingCartItemDTO shoppingCartItemDTO);
+
+    void deleteShoppingCartItem(Long shoppingCartItemId);
 
 }

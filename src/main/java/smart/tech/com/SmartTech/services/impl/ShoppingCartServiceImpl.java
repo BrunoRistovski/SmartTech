@@ -6,6 +6,8 @@ import smart.tech.com.SmartTech.model.exceptions.ShoppingCartNotFoundException;
 import smart.tech.com.SmartTech.repository.ShoppingCartRepository;
 import smart.tech.com.SmartTech.services.interfaces.ShoppingCartService;
 
+import java.util.Optional;
+
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
@@ -17,8 +19,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCart getShoppingCartById(Long shoppingCartId) {
-        return shoppingCartRepository.findById(shoppingCartId).orElseThrow(ShoppingCartNotFoundException::new);
+    public Optional<ShoppingCart> getShoppingCartById(Long shoppingCartId) {
+        return Optional.of(shoppingCartRepository.findById(shoppingCartId).orElseThrow(ShoppingCartNotFoundException::new));
     }
 
 }
