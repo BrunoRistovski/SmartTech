@@ -3,14 +3,17 @@ package smart.tech.com.SmartTech.services.interfaces;
 import smart.tech.com.SmartTech.model.DTO.UserDTO;
 import smart.tech.com.SmartTech.model.domain.User;
 
+import java.util.Optional;
+
 public interface UserService {
 
      User findByUsername(String username);
 
-     User register(UserDTO userDTO);
+     Optional<User> register(UserDTO userDTO);
 
-     User editUser(String username, UserDTO userDTO);
+     Optional<User> login(UserDTO userDTO);
 
+     Optional<User> editUser(String username, UserDTO userDTO);
 
 
 }

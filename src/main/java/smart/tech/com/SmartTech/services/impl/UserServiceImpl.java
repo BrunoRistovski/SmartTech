@@ -5,10 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import smart.tech.com.SmartTech.model.DTO.UserDTO;
 import smart.tech.com.SmartTech.model.domain.*;
 import smart.tech.com.SmartTech.model.enumerations.Role;
-import smart.tech.com.SmartTech.model.exceptions.InvalidEmailException;
-import smart.tech.com.SmartTech.model.exceptions.InvalidPasswordException;
-import smart.tech.com.SmartTech.model.exceptions.InvalidUsernameException;
-import smart.tech.com.SmartTech.model.exceptions.UserNotFoundException;
+import smart.tech.com.SmartTech.model.exceptions.*;
 import smart.tech.com.SmartTech.repository.ShoppingCartRepository;
 import smart.tech.com.SmartTech.repository.UserRepository;
 import smart.tech.com.SmartTech.services.interfaces.UserService;
@@ -16,6 +13,7 @@ import smart.tech.com.SmartTech.services.interfaces.UserService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -35,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User register(UserDTO userDTO) {
+    public Optional<User> register(UserDTO userDTO) {
 
         if(userRepository.findById(userDTO.getUsername()).isPresent()) {
             throw new InvalidUsernameException(userDTO.getUsername());
@@ -52,13 +50,26 @@ public class UserServiceImpl implements UserService {
 
         shoppingCart.setUser(user);
         shoppingCartRepository.save(shoppingCart);
+        userRepository.save(user);
 
-        return userRepository.save(user);
+        return Optional.of(user);
     }
 
     @Transactional
     @Override
-    public User editUser(String username, UserDTO userDTO) {
+    public Optional<User> login(UserDTO userDTO) {
+
+        User user = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(InvalidCredentialsException::new);
+        if(!user.getPassword().equals(userDTO.getPassword())) {
+            throw new InvalidCredentialsException();
+        }
+
+        return Optional.of(user);
+    }
+
+    @Transactional
+    @Override
+    public Optional<User> editUser(String username, UserDTO userDTO) {
 
         User user = findByUsername(username);
         user.setFirstName(userDTO.getFirstName());
@@ -66,7 +77,10 @@ public class UserServiceImpl implements UserService {
         user.setPhoneNumber(userDTO.getPhoneNumber());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
-        return userRepository.save(user);
+
+        userRepository.save(user);
+
+        return Optional.of(user);
     }
 
     public void ExceptionFunction(UserDTO userDTO) {

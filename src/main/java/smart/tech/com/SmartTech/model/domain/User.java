@@ -1,5 +1,6 @@
 package smart.tech.com.SmartTech.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,8 +44,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonManagedReference
     @JoinColumn(nullable = false)
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne( cascade = CascadeType.ALL)
     private ShoppingCart shoppingCart;
 
     @OneToMany(mappedBy = "user")
