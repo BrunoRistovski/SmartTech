@@ -5,17 +5,18 @@ import smart.tech.com.SmartTech.model.enumerations.Category;
 import smart.tech.com.SmartTech.model.domain.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductService {
 
     List<Product> getProducts();
 
-    Product getProduct(Long productId);
+    Optional<Product> getProduct(Long productId);
 
-    Product createProduct(ProductDTO productDTO);
+    Optional<Product> createProduct(ProductDTO productDTO);
 
-    Product updateProduct(Long productId, ProductDTO productDTO);
+    Optional<Product> updateProduct(Long productId, ProductDTO productDTO);
 
-    Product deleteProduct(Long productId);
+    Optional<Product> deleteProduct(Long productId);
 
 }

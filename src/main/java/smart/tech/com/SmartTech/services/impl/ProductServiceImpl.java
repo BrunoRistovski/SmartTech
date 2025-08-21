@@ -13,6 +13,7 @@ import smart.tech.com.SmartTech.services.interfaces.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -29,25 +30,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProduct(Long productId) {
-        return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+    public Optional<Product> getProduct(Long productId) {
+        return Optional.of(productRepository.findById(productId).orElseThrow(ProductNotFoundException::new));
     }
 
     @Transactional
     @Override
-    public Product createProduct(ProductDTO productDTO) {
+    public Optional<Product> createProduct(ProductDTO productDTO) {
 
         List<ShoppingCartItem> shoppingCartItemsInProduct = new ArrayList<>();
         List<OrderItem> orderItemsInsideProduct = new ArrayList<>();
 
         Product product = new Product(productDTO.getName(),productDTO.getDescription(),productDTO.getImageUrl(),productDTO.getCategory(),
                 productDTO.getPrice(),productDTO.getStockQuantity(),shoppingCartItemsInProduct,orderItemsInsideProduct);
-        return productRepository.save(product);
+
+        productRepository.save(product);
+
+        return Optional.of(product);
     }
 
     @Transactional
     @Override
-    public Product updateProduct(Long productId, ProductDTO productDTO) {
+    public Optional<Product> updateProduct(Long productId, ProductDTO productDTO) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
@@ -55,14 +59,17 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(productDTO.getCategory());
         product.setPrice(productDTO.getPrice());
         product.setStockQuantity(productDTO.getStockQuantity());
-        return productRepository.save(product);
+
+        productRepository.save(product);
+
+        return Optional.of(product);
     }
 
     @Transactional
     @Override
-    public Product deleteProduct(Long productId) {
+    public Optional<Product> deleteProduct(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
         productRepository.delete(product);
-        return product;
+        return Optional.of(product);
     }
 }

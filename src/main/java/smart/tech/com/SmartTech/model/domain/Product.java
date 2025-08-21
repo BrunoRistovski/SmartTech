@@ -40,10 +40,10 @@ public class Product {
 
     private Integer stockQuantity;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<ShoppingCartItem> shoppingCartItems;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<OrderItem> orderItems;
 
     public Product(String name, String description, String imageUrl, Category category, Double price, Integer stockQuantity, List<ShoppingCartItem> shoppingCartItems, List<OrderItem> orderItems) {
