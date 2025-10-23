@@ -1,5 +1,6 @@
 package smart.tech.com.SmartTech.services.impl;
 
+import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smart.tech.com.SmartTech.model.DTO.UserDTO;
@@ -20,10 +21,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ShoppingCartRepository shoppingCartRepository;
+    private final MailService mailService;
 
-    public UserServiceImpl(UserRepository userRepository, ShoppingCartRepository shoppingCartRepository) {
+    public UserServiceImpl(UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, MailService mailService) {
         this.userRepository = userRepository;
         this.shoppingCartRepository = shoppingCartRepository;
+        this.mailService = mailService;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class UserServiceImpl implements UserService {
         shoppingCart.setUser(user);
         shoppingCartRepository.save(shoppingCart);
         userRepository.save(user);
+        mailService.sendEmail(user.getEmail(),"SmartTech account registration","Welcome to SmartTech dear " + user.getUsername());
 
         return Optional.of(user);
     }

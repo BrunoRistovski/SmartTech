@@ -31,13 +31,15 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ShoppingCartItemService shoppingCartItemService;
     private final OrderItemService orderItemService;
+    private final MailService mailService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, UserService userService, OrderItemRepository orderItemRepository, ShoppingCartItemRepository shoppingCartItemRepository, ShoppingCartItemService shoppingCartItemService, OrderItemService orderItemService) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserService userService, OrderItemRepository orderItemRepository, ShoppingCartItemRepository shoppingCartItemRepository, ShoppingCartItemService shoppingCartItemService, OrderItemService orderItemService, MailService mailService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.orderItemRepository = orderItemRepository;
         this.shoppingCartItemService = shoppingCartItemService;
         this.orderItemService = orderItemService;
+        this.mailService = mailService;
     }
 
     @Override
@@ -57,12 +59,12 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItems = new ArrayList<>();
         User user = userService.findByUsername(orderDTO.getUsername());
 
-        Order order = new Order(OrderStatus.CREATED,orderDTO.getAddress(),orderDTO.getCity(),orderDTO.getZipcode(),LocalDateTime.now(),0.0,user,orderItems);
+        Order order = new Order(OrderStatus.CREATED, orderDTO.getAddress(), orderDTO.getCity(), orderDTO.getZipcode(), LocalDateTime.now(), 0.0, user, orderItems);
 
         orderRepository.save(order);
 
         ShoppingCart shoppingcart = user.getShoppingCart();
-        List<ShoppingCartItem>  shoppingCartItems = shoppingcart.getShoppingCartItems();
+        List<ShoppingCartItem> shoppingCartItems = shoppingcart.getShoppingCartItems();
         List<ShoppingCartItem> itemsToDelete = new ArrayList<>(shoppingCartItems);
 
         for (ShoppingCartItem shoppingCartItem : itemsToDelete) {
@@ -86,6 +88,16 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.PAYED);
 
         orderRepository.save(order);
+
+        StringBuilder emailText = new StringBuilder();
+        emailText.append("Hi ").append(order.getUser().getUsername()).append(".\n");
+        emailText.append("Thank you for order!\n");
+        emailText.append("Order details: \n");
+        for(OrderItem orderItem : order.getOrderItems()) {
+            emailText.append(orderItem.getProduct().getName()).append(" - Quantity: ").append(orderItem.getQuantity()).append("\n");
+        }
+        emailText.append("Total Price : ").append(order.getTotalAmount()).append("\n");
+        mailService.sendEmail(order.getUser().getEmail(),"Your Order Confirmation",emailText.toString());
 
         return Optional.of(order);
     }
