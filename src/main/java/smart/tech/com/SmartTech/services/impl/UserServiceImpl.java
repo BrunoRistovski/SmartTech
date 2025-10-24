@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsername(String username) {
-        return userRepository.findById(username).orElseThrow(() -> new UserNotFoundException(username));
+        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
     }
 
     @Transactional
@@ -76,11 +76,11 @@ public class UserServiceImpl implements UserService {
     public Optional<User> editUser(String username, UserDTO userDTO) {
 
         User user = findByUsername(username);
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
+        user.setFirstName(userDTO.getFirstName() != null ? userDTO.getFirstName() : user.getFirstName());
+        user.setLastName(userDTO.getLastName() != null ? userDTO.getLastName() : user.getLastName());
+        user.setPhoneNumber(userDTO.getPhoneNumber() != null ? userDTO.getPhoneNumber() : user.getPhoneNumber());
+        user.setEmail(userDTO.getEmail() != null ? userDTO.getEmail() : user.getEmail());
+        user.setPassword(userDTO.getPassword()!= null ? userDTO.getPassword() : user.getPassword());
 
         userRepository.save(user);
 
