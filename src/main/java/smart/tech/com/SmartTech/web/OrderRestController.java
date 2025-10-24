@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import smart.tech.com.SmartTech.model.DTO.OrderDTO;
 import smart.tech.com.SmartTech.model.domain.Order;
+import smart.tech.com.SmartTech.services.impl.StripeService;
 import smart.tech.com.SmartTech.services.interfaces.OrderItemService;
 import smart.tech.com.SmartTech.services.interfaces.OrderService;
 
@@ -15,7 +16,7 @@ public class OrderRestController {
     private final OrderService orderService;
 
 
-    public OrderRestController(OrderService orderService, OrderItemService orderItemService) {
+    public OrderRestController(OrderService orderService, OrderItemService orderItemService, StripeService stripeService) {
         this.orderService = orderService;
     }
 
