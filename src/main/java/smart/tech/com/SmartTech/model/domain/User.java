@@ -7,9 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import smart.tech.com.SmartTech.model.enumerations.Role;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -19,7 +24,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @Column(nullable = false, unique = true)
@@ -54,4 +59,50 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
+    @Column(nullable = false)
+    private boolean isAccountNonExpired = true;
+    @Column(nullable = false)
+    private boolean isAccountNonLocked = true;
+    @Column(nullable = false)
+    private boolean isCredentialsNonExpired = true;
+    @Column(nullable = false)
+    private boolean isEnabled = true;
+
+    public User(String username, String firstName, String lastName, LocalDateTime createdAt, String phoneNumber, String email, String password, Role role, ShoppingCart shoppingCart, List<Order> orders) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.createdAt = createdAt;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.shoppingCart = shoppingCart;
+        this.orders = orders;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(role);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return isAccountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isAccountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isCredentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isEnabled;
+    }
 }

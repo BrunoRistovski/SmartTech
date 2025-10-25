@@ -1,5 +1,12 @@
 package smart.tech.com.SmartTech.model.enumerations;
 
-public enum Role {
-    ADMIN, USER
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Role implements GrantedAuthority {
+    ROLE_ADMIN, ROLE_USER;
+
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }

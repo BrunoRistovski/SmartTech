@@ -45,7 +45,7 @@ public class ProductRestController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Long id) {
         return productService.deleteProduct(id)
                 .map(product -> ResponseEntity.ok().body(product))
