@@ -1,5 +1,6 @@
 package smart.tech.com.SmartTech.services.impl;
 
+import com.stripe.model.tax.Registration;
 import org.springframework.mail.MailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -7,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smart.tech.com.SmartTech.JWT.util.JwtUtil;
+import smart.tech.com.SmartTech.model.DTO.LoginResponseDTO;
 import smart.tech.com.SmartTech.model.DTO.UserDTO;
 import smart.tech.com.SmartTech.model.domain.*;
 import smart.tech.com.SmartTech.model.enumerations.Role;
@@ -27,12 +30,14 @@ public class UserServiceImpl implements UserService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public UserServiceImpl(UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, MailService mailService, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, MailService mailService, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.mailService = mailService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -67,14 +72,24 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<User> login(UserDTO userDTO) {
+    public User login(UserDTO userDTO) {
 
         User user = userRepository.findByUsername(userDTO.getUsername()).orElseThrow(InvalidCredentialsException::new);
         if(!passwordEncoder.matches(userDTO.getPassword(),user.getPassword())) {
             throw new InvalidCredentialsException();
         }
 
-        return Optional.of(user);
+        return user;
+    }
+
+    @Transactional
+    @Override
+    public Optional<LoginResponseDTO> createToken (UserDTO userDTO){
+
+        User user = login(userDTO);
+        String token = jwtUtil.generateToken(user);
+
+        return Optional.of(new LoginResponseDTO(token));
     }
 
     @Transactional

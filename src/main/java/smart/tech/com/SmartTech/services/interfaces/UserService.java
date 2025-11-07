@@ -1,6 +1,7 @@
 package smart.tech.com.SmartTech.services.interfaces;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
+import smart.tech.com.SmartTech.model.DTO.LoginResponseDTO;
 import smart.tech.com.SmartTech.model.DTO.UserDTO;
 import smart.tech.com.SmartTech.model.domain.User;
 
@@ -12,9 +13,9 @@ public interface UserService extends UserDetailsService {
 
      Optional<User> register(UserDTO userDTO);
 
-     Optional<User> login(UserDTO userDTO);
+     User login(UserDTO userDTO);
 
      Optional<User> editUser(String username, UserDTO userDTO);
 
-
+     Optional<LoginResponseDTO> createToken (UserDTO userDTO);
 }

@@ -2,8 +2,10 @@ package smart.tech.com.SmartTech.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import smart.tech.com.SmartTech.model.DTO.LoginResponseDTO;
 import smart.tech.com.SmartTech.model.DTO.UserDTO;
 import smart.tech.com.SmartTech.model.domain.User;
+import smart.tech.com.SmartTech.model.exceptions.InvalidCredentialsException;
 import smart.tech.com.SmartTech.services.interfaces.UserService;
 
 
@@ -26,17 +28,22 @@ public class UserRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody UserDTO userDTO) {
-        return userService.login(userDTO)
-                .map(user -> ResponseEntity.ok().body(user))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody UserDTO userDTO) {
+        try {
+            return userService.createToken(userDTO)
+                    .map(ResponseEntity::ok)
+                    .orElseThrow(InvalidCredentialsException::new);
+        } catch (InvalidCredentialsException e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @PutMapping("/edit/{username}")
     public ResponseEntity<User> editUser(@PathVariable String username, @RequestBody UserDTO userDTO) {
-        return userService.editUser(username,userDTO)
+        return userService.editUser(username, userDTO)
                 .map(user -> ResponseEntity.ok().body(user))
-                .orElseGet(()-> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }
