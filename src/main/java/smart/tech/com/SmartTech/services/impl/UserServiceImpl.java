@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDTO.getLastName() != null ? userDTO.getLastName() : user.getLastName());
         user.setPhoneNumber(userDTO.getPhoneNumber() != null ? userDTO.getPhoneNumber() : user.getPhoneNumber());
         user.setEmail(userDTO.getEmail() != null ? userDTO.getEmail() : user.getEmail());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword())!= null ? passwordEncoder.encode(userDTO.getPassword()) : passwordEncoder.encode(user.getPassword()));
+        user.setPassword(userDTO.getPassword()!= null ? passwordEncoder.encode(userDTO.getPassword()) : user.getPassword());
 
 
         userRepository.save(user);

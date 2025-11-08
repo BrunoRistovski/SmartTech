@@ -3,7 +3,7 @@ package smart.tech.com.SmartTech.JWT.util;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import smart.tech.com.SmartTech.JWT.model.Jwt;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +17,14 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
+    @Value("${security.jwt.secret-key}")
+    private String jwt_SECRET_KEY;
+
+    @Value("${security.jwt.expiration-time}")
+    private String jwt_EXPIRATION_TIME;
+
     private Key getSignIn() {
-        byte[] keyBytes = Decoders.BASE64.decode(Jwt.SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(jwt_SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -54,7 +60,7 @@ public class JwtUtil {
                 .setClaims(extraClaims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + Jwt.EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwt_EXPIRATION_TIME)))
                 .signWith(getSignIn(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -62,7 +68,7 @@ public class JwtUtil {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("roles", userDetails.getAuthorities());
-        return buildToken(extraClaims, userDetails.getUsername(), Jwt.EXPIRATION_TIME);
+        return buildToken(extraClaims, userDetails.getUsername(), Long.parseLong(jwt_EXPIRATION_TIME));
     }
 
     private boolean isExpired(String token) {
