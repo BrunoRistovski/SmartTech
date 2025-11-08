@@ -51,6 +51,7 @@ public class Order {
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
+    @JoinColumn(name = "username")
     private User user;
 
     @JsonBackReference
