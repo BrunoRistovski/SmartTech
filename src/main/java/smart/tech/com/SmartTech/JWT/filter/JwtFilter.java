@@ -13,7 +13,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import smart.tech.com.SmartTech.JWT.model.Jwt;
 import smart.tech.com.SmartTech.JWT.util.JwtUtil;
 import smart.tech.com.SmartTech.model.domain.User;
 import smart.tech.com.SmartTech.services.interfaces.UserService;
@@ -39,13 +38,13 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        String headerValue = request.getHeader(Jwt.HEADER);
-        if (headerValue == null || !headerValue.startsWith(Jwt.TOKEN_PREFIX)) {
+        String headerValue = request.getHeader("Authorization");
+        if (headerValue == null || !headerValue.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = headerValue.substring(Jwt.TOKEN_PREFIX.length());
+        String token = headerValue.substring("Bearer ".length());
 
         try {
             String username = jwtUtil.extractUsername(token);
