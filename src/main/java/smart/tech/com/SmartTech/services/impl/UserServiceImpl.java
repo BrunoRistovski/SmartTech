@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> register(UserDTO userDTO) {
 
-        if(userRepository.findById(userDTO.getUsername()).isPresent()) {
+        if(userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
             throw new InvalidUsernameException(userDTO.getUsername());
         }
         ExceptionFunction(userDTO);
@@ -84,16 +84,6 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<LoginResponseDTO> createToken (UserDTO userDTO){
-
-        User user = login(userDTO);
-        String token = jwtUtil.generateToken(user);
-
-        return Optional.of(new LoginResponseDTO(token));
-    }
-
-    @Transactional
-    @Override
     public Optional<User> editUser(String username, UserDTO userDTO) {
 
         User user = findByUsername(username);
@@ -109,6 +99,21 @@ public class UserServiceImpl implements UserService {
         return Optional.of(user);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+    }
+
+    @Transactional
+    @Override
+    public Optional<LoginResponseDTO> createToken (UserDTO userDTO){
+
+        User user = login(userDTO);
+        String token = jwtUtil.generateToken(user);
+
+        return Optional.of(new LoginResponseDTO(token));
+    }
+
     public void ExceptionFunction(UserDTO userDTO) {
 
         if (userRepository.findByEmail(userDTO.getEmail()).isPresent())
@@ -117,10 +122,5 @@ public class UserServiceImpl implements UserService {
         if(!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
             throw new InvalidPasswordException();
         }
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }

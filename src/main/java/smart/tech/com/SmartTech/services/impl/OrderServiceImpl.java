@@ -1,6 +1,5 @@
 package smart.tech.com.SmartTech.services.impl;
 
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smart.tech.com.SmartTech.model.DTO.OrderDTO;
@@ -8,16 +7,13 @@ import smart.tech.com.SmartTech.model.DTO.OrderItemDTO;
 import smart.tech.com.SmartTech.model.domain.*;
 import smart.tech.com.SmartTech.model.enumerations.OrderStatus;
 import smart.tech.com.SmartTech.model.exceptions.OrderNotFoundException;
-import smart.tech.com.SmartTech.repository.OrderItemRepository;
-import smart.tech.com.SmartTech.repository.OrderRepository;
-import smart.tech.com.SmartTech.repository.ShoppingCartItemRepository;
-import smart.tech.com.SmartTech.repository.UserRepository;
+import smart.tech.com.SmartTech.repository.*;
 import smart.tech.com.SmartTech.services.interfaces.OrderItemService;
 import smart.tech.com.SmartTech.services.interfaces.OrderService;
 import smart.tech.com.SmartTech.services.interfaces.ShoppingCartItemService;
 import smart.tech.com.SmartTech.services.interfaces.UserService;
 
-import javax.swing.text.html.Option;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +28,16 @@ public class OrderServiceImpl implements OrderService {
     private final ShoppingCartItemService shoppingCartItemService;
     private final OrderItemService orderItemService;
     private final MailService mailService;
+    private final ProductRepository productRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository, UserService userService, OrderItemRepository orderItemRepository, ShoppingCartItemRepository shoppingCartItemRepository, ShoppingCartItemService shoppingCartItemService, OrderItemService orderItemService, MailService mailService) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserService userService, OrderItemRepository orderItemRepository, ShoppingCartItemRepository shoppingCartItemRepository, ShoppingCartItemService shoppingCartItemService, OrderItemService orderItemService, MailService mailService, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.orderItemRepository = orderItemRepository;
         this.shoppingCartItemService = shoppingCartItemService;
         this.orderItemService = orderItemService;
         this.mailService = mailService;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -86,6 +84,15 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
         order.setOrderDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PAYED);
+
+        List<OrderItem> orderItems = orderItemRepository.findAll();
+        for (OrderItem orderItem : orderItems) {
+            if (orderItem.getOrder().getId().equals(orderId)){
+                Product product = orderItem.getProduct();
+                product.setStockQuantity(product.getStockQuantity() - orderItem.getQuantity());
+                productRepository.save(product);
+            }
+        }
 
         orderRepository.save(order);
 
