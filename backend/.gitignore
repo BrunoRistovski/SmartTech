@@ -1,4 +1,4 @@
-HELP.md
+ HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -15,9 +15,9 @@ target/
 application-dev.properties
 docker-compose.yml
 init.sql
+.idea
 
 ### IntelliJ IDEA ###
-.idea
 *.iws
 *.iml
 *.ipr
