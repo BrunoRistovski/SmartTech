@@ -17,9 +17,10 @@ docker-compose.yml
 init.sql
 .idea
 
-### IntelliJ IDEA ###
-*.iws
+# Global ignores
+.idea/
 *.iml
+*.iws
 *.ipr
 
 ### NetBeans ###
