@@ -3,6 +3,7 @@ package smart.tech.com.SmartTech.JWT.util;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,13 @@ public class JwtUtil {
 
     @Value("${security.jwt.expiration-time}")
     private String jwt_EXPIRATION_TIME;
+
+    @PostConstruct
+    public void checkProps() {
+        System.out.println(">>> jwt_SECRET_KEY = " + jwt_SECRET_KEY);
+        System.out.println(">>> jwt_EXPIRATION_TIME = " + jwt_EXPIRATION_TIME);
+    }
+
 
     private Key getSignIn() {
         byte[] keyBytes = Decoders.BASE64.decode(jwt_SECRET_KEY);

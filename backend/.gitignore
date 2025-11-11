@@ -12,7 +12,8 @@ target/
 .settings
 .springBeans
 .sts4-cache
-.env
+application-dev.properties
+docker-compose.yml
 
 ### IntelliJ IDEA ###
 .idea
